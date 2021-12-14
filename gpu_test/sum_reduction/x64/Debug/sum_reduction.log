@@ -1,0 +1,11 @@
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(513,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (sum_reduction.vcxproj, test.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  deviceinfo.cpp
+  main.cpp
+C:\01_WSD1\CodeRepo\cuda_test\gpu_test\sum_reduction\main.cpp(38,15): warning C4101: 'start': unreferenced local variable
+C:\01_WSD1\CodeRepo\cuda_test\gpu_test\sum_reduction\main.cpp(39,9): warning C4101: 'duration': unreferenced local variable
+  Generating Code...
+  sum_reduction.vcxproj -> C:\01_WSD1\CodeRepo\cuda_test\gpu_test\x64\Debug\deviceinfo.exe
+  copy "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.5\bin\cudart*.dll" "C:\01_WSD1\CodeRepo\cuda_test\gpu_test\x64\Debug\"
+  C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.5\bin\cudart32_110.dll
+  C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.5\bin\cudart64_110.dll
+          2 file(s) copied.

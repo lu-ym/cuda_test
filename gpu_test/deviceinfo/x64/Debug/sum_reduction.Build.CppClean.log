@@ -1,0 +1,15 @@
+x64\debug\main.cu.obj
+x64\debug\reduce.cu.obj
+c:\01_wsd1\coderepo\cuda_test\gpu-sum-reduction\sum_reduction\x64\debug\sum_reduction.ilk
+c:\01_wsd1\coderepo\cuda_test\gpu-sum-reduction\x64\debug\sum_reduction.exe
+c:\01_wsd1\coderepo\cuda_test\gpu-sum-reduction\x64\debug\sum_reduction.pdb
+c:\01_wsd1\coderepo\cuda_test\gpu-sum-reduction\sum_reduction\x64\debug\main.cu.cache
+c:\01_wsd1\coderepo\cuda_test\gpu-sum-reduction\sum_reduction\x64\debug\reduce.cu.cache
+c:\01_wsd1\coderepo\cuda_test\gpu-sum-reduction\sum_reduction\x64\debug\main.cu.obj
+c:\01_wsd1\coderepo\cuda_test\gpu-sum-reduction\sum_reduction\x64\debug\reduce.cu.obj
+c:\01_wsd1\coderepo\cuda_test\gpu-sum-reduction\sum_reduction\x64\debug\vc142.pdb
+c:\01_wsd1\coderepo\cuda_test\gpu-sum-reduction\sum_reduction\x64\debug\sum_reduction.tlog\cudacompile.read.1u.tlog
+c:\01_wsd1\coderepo\cuda_test\gpu-sum-reduction\sum_reduction\x64\debug\sum_reduction.tlog\cudacompile.write.1u.tlog
+c:\01_wsd1\coderepo\cuda_test\gpu-sum-reduction\sum_reduction\x64\debug\sum_reduction.tlog\link.command.1.tlog
+c:\01_wsd1\coderepo\cuda_test\gpu-sum-reduction\sum_reduction\x64\debug\sum_reduction.tlog\link.read.1.tlog
+c:\01_wsd1\coderepo\cuda_test\gpu-sum-reduction\sum_reduction\x64\debug\sum_reduction.tlog\link.write.1.tlog
