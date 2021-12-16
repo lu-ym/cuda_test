@@ -1,4 +1,4 @@
-#include "reduce.h"
+#include "deviceinfo.h"
 
 #include <cmath>
 
@@ -71,8 +71,8 @@ void gpu_test(void){
 					deviceProp.memoryBusWidth);
 
 	if (deviceProp.l2CacheSize) {
-		printf("  L2 Cache Size:                                 %d bytes\n",
-						deviceProp.l2CacheSize);
+		printf("  L2 Cache Size:                                 %d bytes ( %d Mbyes)\n",
+			deviceProp.l2CacheSize,deviceProp.l2CacheSize/1024);
 	}
 
 #else
@@ -92,8 +92,8 @@ void gpu_test(void){
 	getCudaAttribute<int>(&L2CacheSize, CU_DEVICE_ATTRIBUTE_L2_CACHE_SIZE, dev);
 
 	if (L2CacheSize) {
-		printf("  L2 Cache Size:                                 %d bytes\n",
-						L2CacheSize);
+		printf("  L2 Cache Size:                                 %d bytes ( %d Mbyes)\n",
+					deviceProp.l2CacheSize,deviceProp.l2CacheSize/1024);
 	}
 
 #endif

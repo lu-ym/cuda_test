@@ -31,7 +31,11 @@ unsigned int cpu_simple_sum(unsigned int* h_in, unsigned int h_in_len)
 	return total_sum;
 }
 
-
+/**
+ * @brief sum reduction
+ * 
+ * @return int 
+ */
 int main()
 {
 	// Set up clock for timing comparisons

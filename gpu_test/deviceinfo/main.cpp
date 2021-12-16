@@ -6,7 +6,7 @@
 #include "device_launch_parameters.h"
 #include "utils.h"
 
-#include "reduce.h"
+//#include "reduce.h"
 #include "deviceinfo.h"
 // success after add this comment -- should be VS issue.
 #pragma comment(lib,"cuda.lib")
@@ -39,9 +39,7 @@ int main()
 	double duration;
 
 	// generate test
-	// gpu_test();
-
+	gpu_test();
 	
-
 	
 }

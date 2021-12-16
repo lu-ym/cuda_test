@@ -23,9 +23,9 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{783421B5-06EF-49D4-87CB-0B8272062EC8}</ProjectGuid>
+    <ProjectGuid>{E8413813-8748-4887-B4F6-A35ADA60CBC9}</ProjectGuid>
     <RootNamespace>sum_reduction</RootNamespace>
-    <ProjectName>deviceinfo</ProjectName>
+    <ProjectName>sum_reduction</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
