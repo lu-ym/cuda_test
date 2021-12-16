@@ -7,7 +7,7 @@
 #include "utils.h"
 
 #include "reduce.h"
-#include "deviceinfo.h"
+
 // success after add this comment -- should be VS issue.
 #pragma comment(lib,"cuda.lib")
 // #pragma comment(lib,"cudart.lib")

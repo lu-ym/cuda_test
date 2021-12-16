@@ -4,3 +4,11 @@
 *.ptx
 *.cubin
 *.fatbin
+
+*.obj
+*.pdb
+*.idb
+*.ilk
+*.vcxproj.user
+gpu_test/.vs/
+
