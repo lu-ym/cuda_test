@@ -73,5 +73,6 @@ int main(){
 	}
 	std::cout << std::endl;
 	// free(ids);
+	checkCudaErrors(cudaFree(addr_in));
 }
 

@@ -2,7 +2,7 @@
 #define SIMPLETEST_H__
 
 // the thread is organized as one-dimensional
-struct IDS{
+struct __align__(32) IDS{
 	unsigned short tIdx;
 	// unsigned short tIdy;
   unsigned short bIdx;

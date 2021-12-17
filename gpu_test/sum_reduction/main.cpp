@@ -40,9 +40,41 @@ int main()
 {
 	// Set up clock for timing comparisons
 	std::clock_t start;
-	double duration;
+	double duration_cpu;
+	double duration_gpu;
+	// generate test data
+	unsigned int vector_len = 1024;
+	unsigned int *input_vec= new unsigned int[vector_len];
+	generate_input(input_vec,vector_len);
 
-	// generate test
-	gpu_test();
-		
+	// Do CPU sum for reference
+	start = std::clock();
+	unsigned int cpu_total_sum = cpu_simple_sum(input_vec, vector_len);
+	// duration_cpu = (std::clock() - start) / (double)CLOCKS_PER_SEC;
+	duration_cpu = (std::clock() - start);
+	std::cout << cpu_total_sum << std::endl;
+	// std::cout << "CPU time: " << duration_cpu << " s" << std::endl;
+	std::cout << "CPU time: " << duration_cpu << " ms" << std::endl;
+
+	// Set up device-side memory for input
+	unsigned int* d_in;
+	checkCudaErrors(cudaMalloc(&d_in, sizeof(unsigned int) * vector_len));
+	checkCudaErrors(cudaMemcpy(d_in, input_vec, sizeof(unsigned int) * vector_len, cudaMemcpyHostToDevice));
+	start = std::clock();
+	unsigned int gpu_total_sum = gpu_sum_reduce(d_in,vector_len);
+	duration_gpu = (std::clock() - start) / (double)CLOCKS_PER_SEC;
+	// duration_gpu = (std::clock() - start);
+	std::cout << cpu_total_sum << std::endl;
+	std::cout << "GPU time: " << duration_gpu << " s" << std::endl;
+	// std::cout << "CPU time: " << duration_gpu << " ms" << std::endl;
+
+	checkCudaErrors(cudaFree(d_in));
+	delete[] input_vec;
+	// acceleration rate
+	// std::cout << "Calculation result is" << lambda(cpu_total_sum == gpu_total_sum) ? ("Pass") : ("Fail") << std::endl;
+	std::cout << "Calculation result is"; 
+	if(cpu_total_sum == gpu_total_sum) 	std::cout << "Pass"<< std::endl;
+	else 	std::cout << "Fail" << std::endl;
+	std::cout << "Accelaration Rate is " << duration_gpu / duration_cpu << " times" << std::endl;
+	return 0;
 }

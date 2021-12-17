@@ -158,6 +158,7 @@ copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"</Command>
     </CudaCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="simpletest.h" />
     <ClInclude Include="utils.h" />
   </ItemGroup>
   <ItemGroup>

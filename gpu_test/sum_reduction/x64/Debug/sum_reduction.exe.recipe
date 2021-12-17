@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>C:\01_WSD1\CodeRepo\cuda_test\gpu-sum-reduction\x64\Debug\sum_reduction.exe</FullPath>
+      <FullPath>C:\01_WSD1\CodeRepo\cuda_test\gpu_test\x64\Debug\sum_reduction.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />
