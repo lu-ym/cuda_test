@@ -1,12 +1,12 @@
 #include <iostream>
-#include <ctime>
+#include <iomanip>
 
 #include "cuda.h"
-
 #include "device_launch_parameters.h"
-#include "utils.h"
 
+#include "utils.h"
 #include "reduce.h"
+#include "utilsm.h"
 
 // success after add this comment -- should be VS issue.
 #pragma comment(lib,"cuda.lib")
@@ -38,43 +38,39 @@ unsigned int cpu_simple_sum(unsigned int* h_in, unsigned int h_in_len)
  */
 int main()
 {
-	// Set up clock for timing comparisons
-	std::clock_t start;
-	double duration_cpu;
-	double duration_gpu;
+	unsigned long long time_start,duration_cpu,duration_gpu;
+	
 	// generate test data
 	unsigned int vector_len = 1024;
 	unsigned int *input_vec= new unsigned int[vector_len];
 	generate_input(input_vec,vector_len);
 
 	// Do CPU sum for reference
-	start = std::clock();
+	std::cout << "CPU computation:" << std::endl;
+	time_start = get_time_us();
 	unsigned int cpu_total_sum = cpu_simple_sum(input_vec, vector_len);
-	// duration_cpu = (std::clock() - start) / (double)CLOCKS_PER_SEC;
-	duration_cpu = (std::clock() - start);
-	std::cout << cpu_total_sum << std::endl;
-	// std::cout << "CPU time: " << duration_cpu << " s" << std::endl;
-	std::cout << "CPU time: " << duration_cpu << " ms" << std::endl;
+	duration_cpu = get_time_us() - time_start;
+	std::cout << "  duration: ";
+  print_time_us(duration_cpu);
+  std::cout << "  result: " << cpu_total_sum << std::endl << std::endl;
 
-	// Set up device-side memory for input
-	unsigned int* d_in;
-	checkCudaErrors(cudaMalloc(&d_in, sizeof(unsigned int) * vector_len));
-	checkCudaErrors(cudaMemcpy(d_in, input_vec, sizeof(unsigned int) * vector_len, cudaMemcpyHostToDevice));
-	start = std::clock();
-	unsigned int gpu_total_sum = gpu_sum_reduce(d_in,vector_len);
-	duration_gpu = (std::clock() - start) / (double)CLOCKS_PER_SEC;
-	// duration_gpu = (std::clock() - start);
-	std::cout << cpu_total_sum << std::endl;
-	std::cout << "GPU time: " << duration_gpu << " s" << std::endl;
-	// std::cout << "CPU time: " << duration_gpu << " ms" << std::endl;
+	// GPU calculation
+	std::cout << "GPU computation:" << std::endl;
+	time_start = get_time_us();
+	unsigned int gpu_total_sum = gpu_sum_reduce(input_vec,vector_len);
+	duration_gpu = get_time_us() - time_start;
+	std::cout << "  total duration: ";
+  print_time_us(duration_gpu);
+  std::cout << "  result: " << gpu_total_sum << std::endl << std::endl;
 
-	checkCudaErrors(cudaFree(d_in));
 	delete[] input_vec;
 	// acceleration rate
-	// std::cout << "Calculation result is" << lambda(cpu_total_sum == gpu_total_sum) ? ("Pass") : ("Fail") << std::endl;
-	std::cout << "Calculation result is"; 
-	if(cpu_total_sum == gpu_total_sum) 	std::cout << "Pass"<< std::endl;
-	else 	std::cout << "Fail" << std::endl;
-	std::cout << "Accelaration Rate is " << duration_gpu / duration_cpu << " times" << std::endl;
+	std::cout << "Calculation Result -- ";
+	if (cpu_total_sum == gpu_total_sum) {
+		std::cout << "Pass" << std::endl;
+		std::cout << "Acceleration Rate: " << std::resetiosflags(std::ios::fixed)<< (double)duration_cpu / duration_gpu << " times" << std::endl;
+	}else {
+		std::cout << "Fail" << std::endl;
+	}
 	return 0;
 }

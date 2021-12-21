@@ -25,5 +25,5 @@ __global__ void thread_id_log(struct IDS* const globalMem,const unsigned short l
 }
 
 void gpu_test(int block_size,int grid_sz,struct IDS* const globalMem,const unsigned short len){
-	thread_id_log<<<block_size, grid_sz, len * sizeof(struct IDS) >>>(globalMem,len);
+	thread_id_log<<<grid_sz,block_size, len * sizeof(struct IDS) >>>(globalMem,len);
 }

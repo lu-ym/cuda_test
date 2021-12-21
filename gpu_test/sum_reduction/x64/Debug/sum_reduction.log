@@ -4,6 +4,8 @@
 CUDACOMPILE : nvcc warning : The 'compute_35', 'compute_37', 'compute_50', 'sm_35', 'sm_37' and 'sm_50' architectures are deprecated, and may be removed in a future release (Use -Wno-deprecated-gpu-targets to suppress warning).
   reduce.cu
   main.cpp
+  utilsm.cpp
+  Generating Code...
   sum_reduction.vcxproj -> C:\01_WSD1\CodeRepo\cuda_test\gpu_test\x64\Debug\sum_reduction.exe
   copy "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.5\bin\cudart*.dll" "C:\01_WSD1\CodeRepo\cuda_test\gpu_test\x64\Debug\"
   C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.5\bin\cudart32_110.dll

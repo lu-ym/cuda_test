@@ -1,9 +1,10 @@
 c:\01_wsd1\coderepo\cuda_test\gpu_test\sum_reduction\x64\debug\vc142.pdb
 c:\01_wsd1\coderepo\cuda_test\gpu_test\sum_reduction\x64\debug\vc142.idb
+c:\01_wsd1\coderepo\cuda_test\gpu_test\sum_reduction\x64\debug\utilsm.obj
 c:\01_wsd1\coderepo\cuda_test\gpu_test\sum_reduction\x64\debug\main.obj
 x64\debug\reduce.cu.obj
-c:\01_wsd1\coderepo\cuda_test\gpu_test\sum_reduction\x64\debug\sum_reduction.ilk
 c:\01_wsd1\coderepo\cuda_test\gpu_test\x64\debug\sum_reduction.exe
+c:\01_wsd1\coderepo\cuda_test\gpu_test\sum_reduction\x64\debug\sum_reduction.ilk
 c:\01_wsd1\coderepo\cuda_test\gpu_test\x64\debug\sum_reduction.pdb
 c:\01_wsd1\coderepo\cuda_test\gpu_test\sum_reduction\x64\debug\reduce.cu.cache
 c:\01_wsd1\coderepo\cuda_test\gpu_test\sum_reduction\x64\debug\reduce.cu.obj

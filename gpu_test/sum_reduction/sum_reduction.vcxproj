@@ -20,9 +20,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="utilsm.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="reduce.cu" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="utils.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{E8413813-8748-4887-B4F6-A35ADA60CBC9}</ProjectGuid>

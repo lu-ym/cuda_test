@@ -54,10 +54,11 @@ int main(){
 
 	// Set up device-side memory for input
 	checkCudaErrors(cudaMalloc(&addr_in, TOTAL_THREADS * sizeof(struct IDS)));
-	// generate CUDA parameters and call cuda device functions
-	// unsigned int block_sz = MAX_BLOCK_SZ; 
-	// unsigned int grid_sz = MAX_GRID_SZ;
-	gpu_test(64,64,addr_in,TOTAL_THREADS);	// generate ID lists
+	// generate CUDA parameters and call CUDA device functions
+	unsigned int block_sz = 8;
+	unsigned int grid_sz = TOTAL_THREADS / block_sz;
+	if (TOTAL_THREADS % grid_sz) block_sz++;
+	gpu_test(block_sz, grid_sz, addr_in, TOTAL_THREADS);	// generate ID lists
 
 	checkCudaErrors(cudaMemcpy(ids, addr_in, TOTAL_THREADS * sizeof(struct IDS), cudaMemcpyDeviceToHost));
 	// std::cout << "Threads No:{blockIdX;bIdY;threadIdx,tIdY}" << std::flush;
