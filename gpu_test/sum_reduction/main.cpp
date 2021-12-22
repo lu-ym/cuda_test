@@ -2,6 +2,7 @@
 #include <iomanip>
 
 #include "cuda.h"
+#include "cuda_runtime.h"
 #include "device_launch_parameters.h"
 
 #include "utils.h"
@@ -32,45 +33,54 @@ unsigned int cpu_simple_sum(unsigned int* h_in, unsigned int h_in_len)
 }
 
 /**
- * @brief sum reduction
- * 
- * @return int 
+ * \brief 
+ * \param len_pow the power of data length. base is 2. 2^(len_pow)
+ * \return int 
  */
-int main()
+int main(void)
 {
+  //cuInit(0);		// must have this init
 	unsigned long long time_start,duration_cpu,duration_gpu;
-	
-	// generate test data
-	unsigned int vector_len = 1024;
-	unsigned int *input_vec= new unsigned int[vector_len];
-	generate_input(input_vec,vector_len);
+	unsigned int len_pow = 8;
+	for (;len_pow< 13 ;len_pow++){
+    std::cout << "---------------- len_pow is "<< len_pow <<" ----------------" << std::endl;
+    // generate test data
+    unsigned int vector_len = (unsigned int)1 << len_pow;
+    unsigned int* input_vec = new unsigned int[vector_len];
+    generate_input(input_vec, vector_len);
 
-	// Do CPU sum for reference
-	std::cout << "CPU computation:" << std::endl;
-	time_start = get_time_us();
-	unsigned int cpu_total_sum = cpu_simple_sum(input_vec, vector_len);
-	duration_cpu = get_time_us() - time_start;
-	std::cout << "  duration: ";
-  print_time_us(duration_cpu);
-  std::cout << "  result: " << cpu_total_sum << std::endl << std::endl;
+    // Do CPU sum for reference
+    std::cout << "CPU computation:" << std::endl;
+    time_start = get_time_us();
+    unsigned int cpu_total_sum = cpu_simple_sum(input_vec, vector_len);
+    duration_cpu = get_time_us() - time_start;
+    std::cout << "  duration: ";
+    print_time_us(duration_cpu);
+    std::cout << "  result: " << std::hex <<cpu_total_sum
+			<< std::resetiosflags(std::ios::hex) << std::endl;
+    std::cout << std::endl;
 
-	// GPU calculation
-	std::cout << "GPU computation:" << std::endl;
-	time_start = get_time_us();
-	unsigned int gpu_total_sum = gpu_sum_reduce(input_vec,vector_len);
-	duration_gpu = get_time_us() - time_start;
-	std::cout << "  total duration: ";
-  print_time_us(duration_gpu);
-  std::cout << "  result: " << gpu_total_sum << std::endl << std::endl;
+    // GPU calculation
+    std::cout << "GPU computation:" << std::endl;
+    unsigned int gpu_total_sum = gpu_sum_reduce(input_vec, vector_len,&duration_gpu);
+    std::cout << "  total duration: ";
+    print_time_us(duration_gpu);
+    std::cout << "  result: "  << std::hex << gpu_total_sum 
+			<< std::resetiosflags(std::ios::hex) << std::endl;
+    std::cout  << std::endl;
 
-	delete[] input_vec;
-	// acceleration rate
-	std::cout << "Calculation Result -- ";
-	if (cpu_total_sum == gpu_total_sum) {
-		std::cout << "Pass" << std::endl;
-		std::cout << "Acceleration Rate: " << std::resetiosflags(std::ios::fixed)<< (double)duration_cpu / duration_gpu << " times" << std::endl;
-	}else {
-		std::cout << "Fail" << std::endl;
+    delete[] input_vec;
+    // acceleration rate
+    std::cout << "Calculation Result -- ";
+    if (cpu_total_sum == gpu_total_sum) {
+      std::cout << "Pass" << std::endl;
+    }
+    else {
+      std::cout << "Fail" << std::endl;
+    }
+    std::cout << "Acceleration Rate: " << std::resetiosflags(std::ios::fixed)
+      << (double)duration_cpu / duration_gpu << " times" << std::endl;
+    std::cout << std::endl;
 	}
 	return 0;
 }
