@@ -41,11 +41,12 @@ int main(void)
 {
   //cuInit(0);		// must have this init
 	unsigned long long time_start,duration_cpu,duration_gpu;
-	unsigned int len_pow = 8;
-	for (;len_pow< 13 ;len_pow++){
+	unsigned int len_pow = 15;
+	for (;len_pow < 17 ;len_pow++){
     std::cout << "---------------- len_pow is "<< len_pow <<" ----------------" << std::endl;
     // generate test data
     unsigned int vector_len = (unsigned int)1 << len_pow;
+    std::cout << "vector length is " << vector_len << std::endl;
     unsigned int* input_vec = new unsigned int[vector_len];
     generate_input(input_vec, vector_len);
 

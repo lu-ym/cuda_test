@@ -16,10 +16,11 @@
  * @param d_in_len 
  * @return  
  */
-__global__ void reduce_base(unsigned int* d_in, unsigned short d_in_len){
+__global__ void reduce_base(unsigned int* d_in, unsigned int d_in_len){
 	d_in_len = d_in_len / 2;
   unsigned int tid;
 	while(d_in_len > 0){
+		// should seperate thread id and global memory address id
     tid = threadIdx.x + blockDim.x * blockIdx.x;
 		if (tid < d_in_len){
 			d_in[tid] += d_in[tid + d_in_len];
@@ -36,7 +37,8 @@ __global__ void reduce_base(unsigned int* d_in, unsigned short d_in_len){
  *				should <= MAX_BLOCK_SZ
  * \return 
  */
-unsigned int gpu_sum_reduce(unsigned int* hostMem, unsigned int vector_len,unsigned long long *time_total ){
+unsigned int gpu_sum_reduce(unsigned int* hostMem, unsigned int vector_len,
+														unsigned long long *time_total ){
 	unsigned int* globalMem;
 	unsigned long long time_start;
   unsigned long long duration_mmalc,duration_cp1, duration_cal, duration_cp2, duration_mfree;
@@ -45,42 +47,56 @@ unsigned int gpu_sum_reduce(unsigned int* hostMem, unsigned int vector_len,unsig
 	time_start = get_time_us();
 	checkCudaErrors(cudaMalloc(&globalMem, sizeof(unsigned int) * vector_len));
 	duration_mmalc = get_time_us() - time_start;
-	std::cout << "cudaMalloc time is: ";
-  print_time_us(duration_mmalc);
+	// std::cout << "  cudaMalloc time is: ";
+ // print_time_us(duration_mmalc);
   time_start = get_time_us();
 	checkCudaErrors(cudaMemcpy(globalMem,hostMem , sizeof(unsigned int) * vector_len, 
 		cudaMemcpyHostToDevice));
 	duration_cp1 = get_time_us() - time_start;
 	bandwidth_print(duration_cp1, *hostMem, vector_len);
+
 	// calculation
-  unsigned int block_sz = vector_len / 2;
-  unsigned int grid_sz = 1;
+  unsigned int block_sz;
+  unsigned int grid_sz;
 	if (vector_len > MAX_BLOCK_SZ) {
 		block_sz = MAX_BLOCK_SZ;
 		grid_sz = vector_len / MAX_BLOCK_SZ;
 		if (vector_len % MAX_BLOCK_SZ) grid_sz += 1;
 	}
-	std::cout << "block_sz is " << block_sz << "  grid_sz is " << grid_sz << std::endl;
+	else {
+    block_sz = vector_len / 2;
+    unsigned int grid_sz = 1;
+	}
+  unsigned int shared_mem_sz = block_sz* sizeof(unsigned int);
+  std::cout << "    block_sz is " << block_sz << "  grid_sz is " << grid_sz << std::endl;
 	time_start = get_time_us();
-	reduce_base <<<grid_sz , block_sz, 2 * sizeof(unsigned int) * vector_len >>>
-							(globalMem, vector_len);
+	// third parameter -- shared memory size limitation is 8096 bytes
+  reduce_base <<<grid_sz, block_sz, shared_mem_sz >>>(globalMem, vector_len);
 	duration_cal = get_time_us() - time_start;
-	std::cout << "  calculation duration is:";
-  print_time_us(duration_cal);
+	// std::cout << "  calculation duration is:";
+  // print_time_us(duration_cal);
+
   // copy back to host -- ignore due to we only need sum
-	time_start = get_time_us();
-	checkCudaErrors(cudaMemcpy(hostMem, globalMem, sizeof(unsigned int),
-		cudaMemcpyDeviceToHost));
-	duration_cp2 = get_time_us() - time_start;
-  std::cout << "  Copy back " << std::endl;
-  bandwidth_print(duration_cp2, *hostMem, sizeof(unsigned int)); 
-	time_start = get_time_us();
+	// time_start = get_time_us();
+  // checkCudaErrors(cudaMemcpy(hostMem, globalMem, sizeof(unsigned int), cudaMemcpyDeviceToHost));
+  // 4k data. one NVME IO package
+	checkCudaErrors(cudaMemcpy(hostMem, globalMem, 4096, cudaMemcpyDeviceToHost));	
+	// duration_cp2 = get_time_us() - time_start;
+  // std::cout << "  Copy back " << std::endl;
+  // bandwidth_print(duration_cp2, *hostMem, 1); 
+	// time_start = get_time_us();
   checkCudaErrors(cudaFree(globalMem));
-	duration_mfree = get_time_us() - time_start;
-  std::cout << "  free time is: ";
-  print_time_us(duration_mfree);
-	// return globalMem[0];	// Must not use host memory rather than Device memory!!!
-	*time_total = duration_mmalc + duration_cp1 + duration_cal + duration_cp2 + duration_mfree;
+	// duration_mfree = get_time_us() - time_start;
+  // std::cout << "  free time is: ";
+  // print_time_us(duration_mfree);
+	// print first some result
+	for(unsigned int i = 0; i<64;i++){
+		if(!(i%8)) std::cout << std::endl << "Data[" << std::dec << std::setw(4)<<i << "]";
+		std::cout << " " << std::hex << std::setw(8) << hostMem[i];
+	}
+	std::cout << std::endl;
+  // *time_total = duration_mmalc + duration_cp1 + duration_cal + duration_cp2 + duration_mfree;
+  *time_total = duration_cal ;
 	return hostMem[0];
 }
 
