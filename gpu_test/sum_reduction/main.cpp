@@ -16,7 +16,7 @@ void generate_input(unsigned int* input, unsigned int input_len)
 {
 	for (unsigned int i = 0; i < input_len; ++i)
 	{
-		input[i] = i;
+		input[i] = i % 255;
 	}
 }
 
@@ -41,7 +41,7 @@ int main(void)
 {
   //cuInit(0);		// must have this init
 	unsigned long long time_start,duration_cpu,duration_gpu;
-	unsigned int len_pow = 15;
+	unsigned int len_pow = 11;
 	for (;len_pow < 17 ;len_pow++){
     std::cout << "---------------- len_pow is "<< len_pow <<" ----------------" << std::endl;
     // generate test data
