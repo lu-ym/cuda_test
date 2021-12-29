@@ -94,7 +94,7 @@ unsigned int gpu_sum_reduce(unsigned int* hostMem, unsigned int vector_len,
 		if(!(i%8)) std::cout << std::endl << "Data[" << std::dec << std::setw(4)<<i << "]";
 		std::cout << " " << std::hex << std::setw(8) << hostMem[i];
 	}
-	std::cout << std::endl;
+	std::cout << std::dec << std::endl;
   // *time_total = duration_mmalc + duration_cp1 + duration_cal + duration_cp2 + duration_mfree;
   *time_total = duration_cal ;
 	return hostMem[0];
