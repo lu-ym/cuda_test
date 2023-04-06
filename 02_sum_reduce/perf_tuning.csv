@@ -1,0 +1,7 @@
+items,target/arg,power,data count,data size(bytes),cpu_time(us),gpu_time(us),malloc time,hostToDevice time,bandwidth(MB/s),calculation time,deviceTohost time(4 bytes),bandwidth,free time,notes
+1,test cuda memory,8,256,1K,2,218695,217988,61,16,50,183,,393,first malloc(memory operation) is very slow. Do not know why.
+,,9,512,2K,1,867,177,21,93,28,173,,468,Other data are mostly random.
+,,10,1024,4K,6,951,355,24,163,11,240,,321,
+,,11,2048,8K,6,862,148,31,252,14,252,,417,
+,,12,4096,16K,11,747,161,51,306,16,113,,406,
+2,,15,32768,128K,181,,,,,,,,,
