@@ -2,7 +2,7 @@
 #include <iostream>
 
 #include "cuda.h"
-#include "device_launch_parameters.h"
+#include <device_launch_parameters.h>
 #include "utils.h"
 
 // #include "reduce.h"

@@ -11,5 +11,6 @@
 *.ilk
 *.vcxproj.user
 
-.vscode/*
+.vscode/settings.json
+build/
 

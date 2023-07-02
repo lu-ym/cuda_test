@@ -6,8 +6,8 @@
 #pragma comment(lib, "cuda.lib")
 
 #include "cuda.h"
-#include "cuda_runtime.h"
-#include "device_launch_parameters.h"
+#include <cuda_runtime.h>
+#include <device_launch_parameters.h>
 #include "utils.h"
 // #include "reduce.h"
 #include "simpletest.h"

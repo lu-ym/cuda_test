@@ -2,8 +2,8 @@
 
 #include <cmath>
 
-#include "cuda_runtime.h"
-#include "device_launch_parameters.h"
+#include <cuda_runtime.h>
+#include <device_launch_parameters.h>
 #include "utils.h"
 
 // get device count and info

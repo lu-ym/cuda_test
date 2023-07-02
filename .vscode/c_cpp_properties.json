@@ -4,7 +4,8 @@
       "name": "Cpp",
       "intelliSenseMode": "clang-x64",
       "includePath": [
-        "C:\\Users\\luyin\\mingw64\\x86_64-w64-mingw32\\include"
+        "${workspaceFolder}/common/*",
+        "/usr/local/cuda/include/**"
       ],
       "cStandard": "c11",
       "cppStandard": "c++17"

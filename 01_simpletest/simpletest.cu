@@ -3,7 +3,7 @@
 #include <iostream>
 
 #include "cuda.h"
-#include "device_launch_parameters.h"
+#include <device_launch_parameters.h>
 #include "simpletest.h"
 #include "utils.h"
 

@@ -1,13 +1,36 @@
-#ifndef UTILSM_H__
-#define UTILSM_H__
+#ifndef UTILSM_H__ // UTILSM_H__
+#define UTILSM_H__ // UTILSM_H__
 #include <iomanip>
 #include <iostream>
+
+
+// clock per millisecond
+#define CLOCK_PER_MILLSEC (CLOCKS_PER_SEC / 1000)
 
 unsigned long long get_time_us(void);
 
 __inline void print_time_us(unsigned long long time_d) {
   std::cout << std::setw(6) << time_d / 1000 << " ms " << std::setw(3)
             << time_d % 1000 << " us" << std::endl;
+}
+
+template <typename TT>
+void print_vector(TT* const vector_l, const unsigned int start_n,
+                  const unsigned int len) {
+  unsigned int start = start_n;
+  for (; start < len; start++) {
+    if (!(start % 16)) {
+      if (start != start_n) std::cout << std::endl;
+      std::cout << std::setw(6) << start << ": " << std::flush;
+    }
+    std::cout << std::setw(8) << vector_l[start] << std::flush;
+  }
+  std::cout << std::endl;
+}
+
+inline bool pointEqual(float a, float b) {
+  // return (std::abs(a - b) > 0.001000)? false:true;
+  return (std::abs(a - b) / std::abs(a) > 0.000005) ? false : true;
 }
 
 #define KB_SIZE 1024
@@ -40,4 +63,4 @@ void bandwidth_print(unsigned long long duration, T catgr, unsigned int len) {
   return;
 }
 
-#endif
+#endif // UTILSM_H__

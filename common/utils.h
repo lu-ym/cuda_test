@@ -2,8 +2,8 @@
 // (https://www.udacity.com/course/intro-to-parallel-programming--cs344) Used
 // only for educational purposes
 
-#ifndef UTILS_H__
-#define UTILS_H__
+#ifndef UTILS_H__ // UTILS_H__
+#define UTILS_H__ // UTILS_H__
 
 #include <cuda.h>
 #include <cuda_runtime.h>
@@ -105,4 +105,4 @@ void checkResultsAutodesk(const T* const ref, const T* const gpu,
   }
 }
 
-#endif
+#endif // UTILS_H__

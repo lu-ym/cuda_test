@@ -29,3 +29,6 @@ unsigned long long get_time_us(void) {
   return std::clock() * (1000000 / CLOCKS_PER_SEC);
 #endif
 }
+
+
+
