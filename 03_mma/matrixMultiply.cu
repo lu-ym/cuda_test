@@ -6,11 +6,12 @@
 #include <string>
 
 // #include "cublas_v2.h"
-#include "cuda.h"
+#include <cuda.h>
 #include <cuda_runtime.h>
 #include <device_launch_parameters.h>
 // #include "helper_cuda.h"
 
+#include "cuda_helper.h"
 #include "utils.h"
 #include "utilsm.h"
 
@@ -275,15 +276,18 @@ int main() {
     memcpy(mat3_h, mat3, matrix_size * sizeof(float));
     // prepare data on GPU
     float *mat1_g, *mat2_g, *mat3_g;
-    checkCudaErrors(cudaMalloc((void **)&mat1_g, matrix_size * sizeof(float)));
-    checkCudaErrors(cudaMalloc((void **)&mat2_g, matrix_size * sizeof(float)));
-    checkCudaErrors(cudaMalloc((void **)&mat3_g, matrix_size * sizeof(float)));
-    checkCudaErrors(cudaMemcpy(mat1_g, mat1, matrix_size * sizeof(float),
-                               cudaMemcpyHostToDevice));
-    checkCudaErrors(cudaMemcpy(mat2_g, mat2, matrix_size * sizeof(float),
-                               cudaMemcpyHostToDevice));
-    checkCudaErrors(cudaMemcpy(mat3_g, mat3, matrix_size * sizeof(float),
-                               cudaMemcpyHostToDevice));
+    CheckCudaError(
+        cudaMalloc((void **)&mat1_g, matrix_size * sizeof(float)));
+    CheckCudaError(
+        cudaMalloc((void **)&mat2_g, matrix_size * sizeof(float)));
+    CheckCudaError(
+        cudaMalloc((void **)&mat3_g, matrix_size * sizeof(float)));
+    CheckCudaError(cudaMemcpy(
+        mat1_g, mat1, matrix_size * sizeof(float), cudaMemcpyHostToDevice));
+    CheckCudaError(cudaMemcpy(
+        mat2_g, mat2, matrix_size * sizeof(float), cudaMemcpyHostToDevice));
+    CheckCudaError(cudaMemcpy(
+        mat3_g, mat3, matrix_size * sizeof(float), cudaMemcpyHostToDevice));
 
     // CPU computation  -- ignore this part. Use cublas Sgemm as golden sample
     // start = std::clock();
@@ -297,43 +301,47 @@ int main() {
     // print_matrix(mat3_h, 0, 8, 0, 8, m);
 
     // GPU part, golden. cuda Sgemm
-    // checkCudaErrors(cudaEventCreate(&start_g));
-    // checkCudaErrors(cudaEventCreate(&stop_g));
-    // checkCudaErrors(cudaEventRecord(start_g));
+    // CheckCudaError(cudaEventCreate(&start_g));
+    // CheckCudaError(cudaEventCreate(&stop_g));
+    // CheckCudaError(cudaEventRecord(start_g));
     // status = cublasSgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N, m, m, m, &alpha,
     //                      mat1_g, m, mat2_g, m, &beta, mat3_g, m);
-    // checkCudaErrors(cudaEventRecord(stop_g));
+    // CheckCudaError(cudaEventRecord(stop_g));
     // if (status != CUBLAS_STATUS_SUCCESS) {
     //   fprintf(stderr, "!!!! kernel execution error.\n");
     //   return EXIT_FAILURE;
     // }
-    // checkCudaErrors(cudaEventSynchronize(stop_g));
-    // checkCudaErrors(cudaEventElapsedTime(&duration_cb, start_g, stop_g));
-    // std::cout << "cuBlas computation duration: " << duration_cb << "ms"
+    // CheckCudaError(cudaEventSynchronize(stop_g));
+    // CheckCudaError(cudaEventElapsedTime(&duration_cb, start_g,
+    // stop_g)); std::cout << "cuBlas computation duration: " << duration_cb <<
+    // "ms"
     //           << std::endl;
-    // checkCudaErrors(cudaEventDestroy(start_g));
-    // checkCudaErrors(cudaEventDestroy(stop_g));
-    // checkCudaErrors(cudaMemcpy(mat3_d1, mat3_g, matrix_size * sizeof(float),
+    // CheckCudaError(cudaEventDestroy(start_g));
+    // CheckCudaError(cudaEventDestroy(stop_g));
+    // CheckCudaError(cudaMemcpy(mat3_d1, mat3_g, matrix_size *
+    // sizeof(float),
     //                            cudaMemcpyDeviceToHost));
     // print_matrix(mat3_d1, 0, 4, 0, 8, m);
     // print_matrix(mat3_d1, 0, m, 0, m, m);
 
     // GPU cuda manual implemention. -- basic
-    // checkCudaErrors(cudaMemcpy(mat3_g, mat3, matrix_size * sizeof(float),
+    // CheckCudaError(cudaMemcpy(mat3_g, mat3, matrix_size *
+    // sizeof(float),
     //                            cudaMemcpyHostToDevice));
-    // checkCudaErrors(cudaEventCreate(&start_g));
-    // checkCudaErrors(cudaEventCreate(&stop_g));
-    // checkCudaErrors(cudaEventRecord(start_g));
+    // CheckCudaError(cudaEventCreate(&start_g));
+    // CheckCudaError(cudaEventCreate(&stop_g));
+    // CheckCudaError(cudaEventRecord(start_g));
     // gpu_gemm<<<m, m>>>(m, m, m, alpha, mat1_g, mat2_g, beta, mat3_g);
-    // checkCudaErrors(cudaEventRecord(stop_g));
-    // checkCudaErrors(cudaEventSynchronize(stop_g));
-    // checkCudaErrors(cudaEventElapsedTime(&duration_gpu_1, start_g, stop_g));
-    // std::cout << "GPU manual calculation duration: " << duration_gpu_1 <<
-    // "ms"
+    // CheckCudaError(cudaEventRecord(stop_g));
+    // CheckCudaError(cudaEventSynchronize(stop_g));
+    // CheckCudaError(cudaEventElapsedTime(&duration_gpu_1, start_g,
+    // stop_g)); std::cout << "GPU manual calculation duration: " <<
+    // duration_gpu_1 << "ms"
     //           << std::endl;
-    // checkCudaErrors(cudaEventDestroy(start_g));
-    // checkCudaErrors(cudaEventDestroy(stop_g));
-    // checkCudaErrors(cudaMemcpy(mat3_d2, mat3_g, matrix_size * sizeof(float),
+    // CheckCudaError(cudaEventDestroy(start_g));
+    // CheckCudaError(cudaEventDestroy(stop_g));
+    // CheckCudaError(cudaMemcpy(mat3_d2, mat3_g, matrix_size *
+    // sizeof(float),
     //                            cudaMemcpyDeviceToHost));
     // print_matrix(mat3_d2, 0, 4, 0, 8, m);
     // print_matrix(mat3_d2, 0, 4, 0, 4, m);
@@ -346,12 +354,12 @@ int main() {
     transposeMatrix(mat1, mat1_r, m);
     transposeMatrix(mat2, mat2_r, m);
     transposeMatrix(mat3, mat3_r, m);
-    checkCudaErrors(cudaMemcpy(mat1_g, mat1_r, matrix_size * sizeof(float),
-                               cudaMemcpyHostToDevice));
-    checkCudaErrors(cudaMemcpy(mat2_g, mat2_r, matrix_size * sizeof(float),
-                               cudaMemcpyHostToDevice));
-    checkCudaErrors(cudaMemcpy(mat3_g, mat3_r, matrix_size * sizeof(float),
-                               cudaMemcpyHostToDevice));
+    CheckCudaError(cudaMemcpy(
+        mat1_g, mat1_r, matrix_size * sizeof(float), cudaMemcpyHostToDevice));
+    CheckCudaError(cudaMemcpy(
+        mat2_g, mat2_r, matrix_size * sizeof(float), cudaMemcpyHostToDevice));
+    CheckCudaError(cudaMemcpy(
+        mat3_g, mat3_r, matrix_size * sizeof(float), cudaMemcpyHostToDevice));
     delete mat1_r;
     delete mat2_r;
     delete mat3_r;
@@ -363,24 +371,25 @@ int main() {
               << grid_dim.z << std::endl;
     std::cout << "Block size is: " << block_dim.x << " " << block_dim.y << " "
               << block_dim.z << std::endl;
-    checkCudaErrors(cudaEventCreate(&start_g));
-    checkCudaErrors(cudaEventCreate(&stop_g));
-    checkCudaErrors(cudaEventRecord(start_g));
+    CheckCudaError(cudaEventCreate(&start_g));
+    CheckCudaError(cudaEventCreate(&stop_g));
+    CheckCudaError(cudaEventRecord(start_g));
     gpu_gemm_2<<<grid_dim, block_dim, SM_BYTES_PER_T>>>(m, m, m, alpha, mat1_g,
                                                         mat2_g, beta, mat3_g);
-    checkCudaErrors(cudaEventRecord(stop_g));
+    CheckCudaError(cudaEventRecord(stop_g));
     // check Synchronous error(at kernel lanuch)
-    checkCudaErrors(cudaGetLastError());
+    CheckCudaError(cudaGetLastError());
     // check Asynchronous error(during kernel execution) -- Notes: do sync
-    checkCudaErrors(cudaDeviceSynchronize());
-    checkCudaErrors(cudaEventSynchronize(stop_g));
-    checkCudaErrors(cudaEventElapsedTime(&duration_gpu_2, start_g, stop_g));
+    CheckCudaError(cudaDeviceSynchronize());
+    CheckCudaError(cudaEventSynchronize(stop_g));
+    CheckCudaError(
+        cudaEventElapsedTime(&duration_gpu_2, start_g, stop_g));
     std::cout << "GPU manual calculation(Tiling) duration: " << duration_gpu_2
               << "ms" << std::endl;
-    checkCudaErrors(cudaEventDestroy(start_g));
-    checkCudaErrors(cudaEventDestroy(stop_g));
-    checkCudaErrors(cudaMemcpy(mat3_h, mat3_g, matrix_size * sizeof(float),
-                               cudaMemcpyDeviceToHost));
+    CheckCudaError(cudaEventDestroy(start_g));
+    CheckCudaError(cudaEventDestroy(stop_g));
+    CheckCudaError(cudaMemcpy(
+        mat3_h, mat3_g, matrix_size * sizeof(float), cudaMemcpyDeviceToHost));
     transposeMatrix(mat3_h, mat3_d2, m);
     // print_matrix(mat3_d2, 0, 4, 0, 8, m);
     // print_matrix(mat3_d2, 0, m, 0, m, m);
@@ -400,9 +409,9 @@ int main() {
     delete mat3_h;
     delete mat3_d1;
     delete mat3_d2;
-    checkCudaErrors(cudaFree(mat1_g));
-    checkCudaErrors(cudaFree(mat2_g));
-    checkCudaErrors(cudaFree(mat3_g));
+    CheckCudaError(cudaFree(mat1_g));
+    CheckCudaError(cudaFree(mat2_g));
+    CheckCudaError(cudaFree(mat3_g));
   }
   /* Shutdown */
   // status = cublasDestroy(handle);

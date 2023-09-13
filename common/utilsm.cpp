@@ -1,12 +1,13 @@
 #include "utilsm.h"
 
 #if defined(_WIN32)
-#include <windows.h>
+#include <windows.h>  // Microsoft windows
 // #elif defined(linux)
 // #include <time.h>
 #else
 #include <ctime>
-#endif  // Microsoft windows
+#endif
+
 /**
  * \brief Get the time us object.
  *

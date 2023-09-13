@@ -5,11 +5,13 @@
 // success after add this comment -- should be VS issue.
 #pragma comment(lib, "cuda.lib")
 
-#include "cuda.h"
+#include <cuda.h>
 #include <cuda_runtime.h>
 #include <device_launch_parameters.h>
+
 #include "utils.h"
 // #include "reduce.h"
+#include "cuda_helper.h"
 #include "simpletest.h"
 
 // #pragma comment(lib,"cudart.lib")
@@ -50,15 +52,15 @@ int main() {
   //  }
 
   // Set up device-side memory for input
-  checkCudaErrors(cudaMalloc(&addr_in, TOTAL_THREADS * sizeof(struct IDS)));
+  CheckCudaError(cudaMalloc(&addr_in, TOTAL_THREADS * sizeof(struct IDS)));
   // generate CUDA parameters and call CUDA device functions
   unsigned int block_sz = 8;
   unsigned int grid_sz = TOTAL_THREADS / block_sz;
   if (TOTAL_THREADS % grid_sz) block_sz++;
   gpu_test(block_sz, grid_sz, addr_in, TOTAL_THREADS);  // generate ID lists
 
-  checkCudaErrors(cudaMemcpy(ids, addr_in, TOTAL_THREADS * sizeof(struct IDS),
-                             cudaMemcpyDeviceToHost));
+  CheckCudaError(cudaMemcpy(ids, addr_in, TOTAL_THREADS * sizeof(struct IDS),
+                            cudaMemcpyDeviceToHost));
   // std::cout << "Threads No:{blockIdX;bIdY;threadIdx,tIdY}" << std::flush;
   std::cout << "Threads No:{blockIdX;threadIdx}" << std::flush;
   for (int a = 0; a < TOTAL_THREADS; a++) {
@@ -74,5 +76,5 @@ int main() {
   }
   std::cout << std::endl;
   // free(ids);
-  checkCudaErrors(cudaFree(addr_in));
+  CheckCudaError(cudaFree(addr_in));
 }

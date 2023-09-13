@@ -10,6 +10,7 @@
 #include <device_launch_parameters.h>
 
 // #include "helper_math.h"
+#include "cuda_helper.h"
 #include "utils.h"
 #include "utilsm.h"
 
@@ -112,12 +113,12 @@ int main_old() {
     print_time_us(duration_cpu);
 
     // Set up device-side memory for input
-    checkCudaErrors(cudaMalloc(&vector1_g, length_bytes));
-    checkCudaErrors(cudaMalloc(&vector2_g, length_bytes));
-    checkCudaErrors(cudaMalloc(&vector_sum_g, length_bytes));
-    checkCudaErrors(
+    CheckCudaError(cudaMalloc(&vector1_g, length_bytes));
+    CheckCudaError(cudaMalloc(&vector2_g, length_bytes));
+    CheckCudaError(cudaMalloc(&vector_sum_g, length_bytes));
+    CheckCudaError(
         cudaMemcpy(vector1_g, vector1, length_bytes, cudaMemcpyHostToDevice));
-    checkCudaErrors(
+    CheckCudaError(
         cudaMemcpy(vector2_g, vector2, length_bytes, cudaMemcpyHostToDevice));
 
     // generate CUDA parameters and call CUDA device functions
@@ -133,22 +134,24 @@ int main_old() {
     // unsigned int grid_sz = max_threads_used / block_sz;
     // if (max_threads_used % block_sz) grid_sz++;
     // cudaEvent_t start_g, stop_g;
-    // checkCudaErrors(cudaEventCreate(&start_g));
-    // checkCudaErrors(cudaEventCreate(&stop_g));
-    // checkCudaErrors(cudaEventRecord(start_g));
+    // CheckCudaError(cudaEventCreate(&start_g));
+    // CheckCudaError(cudaEventCreate(&stop_g));
+    // CheckCudaError(cudaEventRecord(start_g));
     // gpu_vector_add<<<grid_sz, block_sz>>>(vector1_g, vector2_g, vector_sum_g,
     //                                       vector_len);
-    // checkCudaErrors(cudaEventRecord(stop_g));
-    // checkCudaErrors(cudaEventSynchronize(stop_g));
-    // checkCudaErrors(cudaEventElapsedTime(&duration_gpu, start_g, stop_g));
-    // std::cout << "GPU computation:" << std::endl;
-    // std::cout << "  duration: " << duration_gpu << "ms" << std::endl;
-    // checkCudaErrors(cudaEventDestroy(start_g));
-    // checkCudaErrors(cudaEventDestroy(stop_g));
+    // CheckCudaError(cudaEventRecord(stop_g));
+    // CheckCudaError(cudaEventSynchronize(stop_g));
+    // CheckCudaError(cudaEventElapsedTime(&duration_gpu, start_g,
+    // stop_g)); std::cout << "GPU computation:" << std::endl; std::cout << "
+    // duration: " << duration_gpu << "ms" << std::endl;
+    // CheckCudaError(cudaEventDestroy(start_g));
+    // CheckCudaError(cudaEventDestroy(stop_g));
 
-    // checkCudaErrors(cudaMemcpy(vector_sum2, vector_sum_g, length_bytes,
+    // CheckCudaError(cudaMemcpy(vector_sum2, vector_sum_g,
+    // length_bytes,
     //                            cudaMemcpyDeviceToHost));
-    // // checkCudaErrors(cudaMemcpy(vector_sum2, vector1_g, length_bytes,
+    // // CheckCudaError(cudaMemcpy(vector_sum2, vector1_g,
+    // length_bytes,
     // //                            cudaMemcpyDeviceToHost));
 
     // int4 version
@@ -161,21 +164,21 @@ int main_old() {
     unsigned int block_sz = 1024;
     unsigned int grid_sz = (max_threads_used + block_sz - 1) / block_sz;
     cudaEvent_t start_g, stop_g;
-    checkCudaErrors(cudaEventCreate(&start_g));
-    checkCudaErrors(cudaEventCreate(&stop_g));
-    checkCudaErrors(cudaEventRecord(start_g));
+    CheckCudaError(cudaEventCreate(&start_g));
+    CheckCudaError(cudaEventCreate(&stop_g));
+    CheckCudaError(cudaEventRecord(start_g));
     gpu_vector_add4<<<grid_sz, block_sz>>>((int4 *)vector1_g, (int4 *)vector2_g,
                                            (int4 *)vector_sum_g,
                                            vector_len / 4);
-    checkCudaErrors(cudaEventRecord(stop_g));
-    checkCudaErrors(cudaEventSynchronize(stop_g));
-    checkCudaErrors(cudaEventElapsedTime(&duration_gpu, start_g, stop_g));
+    CheckCudaError(cudaEventRecord(stop_g));
+    CheckCudaError(cudaEventSynchronize(stop_g));
+    CheckCudaError(cudaEventElapsedTime(&duration_gpu, start_g, stop_g));
     std::cout << "GPU computation:" << std::endl;
     std::cout << "  duration: " << duration_gpu << "ms" << std::endl;
-    checkCudaErrors(cudaEventDestroy(start_g));
-    checkCudaErrors(cudaEventDestroy(stop_g));
-    checkCudaErrors(cudaMemcpy(vector_sum2, vector_sum_g, length_bytes,
-                               cudaMemcpyDeviceToHost));
+    CheckCudaError(cudaEventDestroy(start_g));
+    CheckCudaError(cudaEventDestroy(stop_g));
+    CheckCudaError(cudaMemcpy(vector_sum2, vector_sum_g, length_bytes,
+                              cudaMemcpyDeviceToHost));
 
     // acceleration rate
     std::cout << "Calculation Result -- ";

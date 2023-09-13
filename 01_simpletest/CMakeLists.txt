@@ -14,8 +14,8 @@ file(GLOB LIB_SRC
 )
 
 include_directories(
-  "${CUDA_PATH}/include"
   "${CMAKE_SOURCE_DIR}/common"
+  "${CUDA_PATH}/include"
   "${CMAKE_CURRENT_SOURCE_DIR}/"
 )
 
@@ -23,8 +23,9 @@ target_sources(${PROJECT_NAME} PUBLIC ${LIB_SRC})
 
 target_link_libraries(${PROJECT_NAME}
   PUBLIC
-    ${CUDA_LIBRARY}
-    ${CUDART_LIBRARY}
+  ${CUDA_LIBRARY}
+  ${CUDART_LIBRARY}
+  ${CUBLAS_LIBRARY}
 )
 
 target_link_directories(${PROJECT_NAME}

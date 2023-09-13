@@ -1,11 +1,18 @@
-#ifndef UTILSM_H__ // UTILSM_H__
-#define UTILSM_H__ // UTILSM_H__
+#pragma once
+
 #include <iomanip>
 #include <iostream>
 
-
 // clock per millisecond
 #define CLOCK_PER_MILLSEC (CLOCKS_PER_SEC / 1000)
+
+constexpr uint32_t warp_size_width = 5;
+constexpr uint32_t warp_size = 1 << warp_size_width;
+constexpr uint32_t warp_size_mask = warp_size - 1;
+
+// #define MAX_BLOCK_THREADS 128
+#define MAX_BLOCK_THREADS 1024
+#define MAX_SHARED_MEMORY_SIZE (1024 * 48)
 
 unsigned long long get_time_us(void);
 
@@ -63,4 +70,7 @@ void bandwidth_print(unsigned long long duration, T catgr, unsigned int len) {
   return;
 }
 
-#endif // UTILSM_H__
+template <typename T>
+inline T CeilDiv(T divisor, T dividend) {
+  return (divisor + dividend - 1) / dividend;
+}

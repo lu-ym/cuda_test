@@ -1,29 +1,38 @@
-// Originally from Udacity
-// (https://www.udacity.com/course/intro-to-parallel-programming--cs344) Used
+// from Udacity
+// (https://www.udacity.com/course/intro-to-parallel-programming--cs344). Used
 // only for educational purposes
 
-#ifndef UTILS_H__ // UTILS_H__
-#define UTILS_H__ // UTILS_H__
+#pragma once
 
+#include <algorithm>
+#include <cassert>
+#include <cmath>
+#include <cstdlib>
+#include <ctime>
+#include <iomanip>
+#include <iostream>
+#include <random>
+#include <vector>
+// cuda api
 #include <cuda.h>
 #include <cuda_runtime.h>
 #include <cuda_runtime_api.h>
 
-#include <cassert>
-#include <cmath>
-#include <iomanip>
-#include <iostream>
-
-#define checkCudaErrors(val) check((val), #val, __FILE__, __LINE__)
-
 template <typename T>
-void check(T err, const char* const func, const char* const file,
-           const int line) {
-  if (err != cudaSuccess) {
-    std::cerr << "CUDA error at: " << file << ":" << line << std::endl;
-    std::cerr << cudaGetErrorString(err) << " " << func << std::endl;
-    exit(1);
+void GenRandomVec(std::vector<T>& vec, T range_low = 0, T range_high = 1,
+                  bool random_seed = true) {
+  uint32_t seed = 0;
+  if (random_seed) {
+    seed = std::time(nullptr);
   }
+
+  std::default_random_engine e;
+  std::uniform_real_distribution<T> dist(range_low, range_high);
+
+  auto gen = [&dist, &e]() { return dist(e); };
+
+  std::generate(vec.begin(), vec.end(), gen);
+  return;
 }
 
 template <typename T>
@@ -79,30 +88,3 @@ void checkResultsEps(const T* const ref, const T* const gpu, size_t numElem,
     exit(1);
   }
 }
-
-// Uses the autodesk method of image comparison
-// Note the the tolerance here is in PIXELS not a percentage of input pixels
-template <typename T>
-void checkResultsAutodesk(const T* const ref, const T* const gpu,
-                          size_t numElem, double variance, size_t tolerance) {
-  size_t numBadPixels = 0;
-  for (size_t i = 0; i < numElem; ++i) {
-#ifdef _WIN32
-    T smaller = std::fmin(ref[i], gpu[i]);
-    T larger = std::fmax(ref[i], gpu[i]);
-#else
-    T smaller = std::min(ref[i], gpu[i]);
-    T larger = std::max(ref[i], gpu[i]);
-#endif
-    T diff = larger - smaller;
-    if (diff > variance) ++numBadPixels;
-  }
-
-  if (numBadPixels > tolerance) {
-    std::cerr << "Too many bad pixels in the image." << numBadPixels << "/"
-              << tolerance << std::endl;
-    exit(1);
-  }
-}
-
-#endif // UTILS_H__

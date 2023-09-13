@@ -11,6 +11,7 @@
 
 #include "utils.h"
 #include "utilsm.h"
+#include "cuda_helper.h"
 
 // #define MAX_THREADS 8192
 
@@ -184,27 +185,27 @@ int main_old() {
         float **temp_pp = new float *[m];
         unsigned int row_size = m * sizeof(float);
         unsigned int row_pointer_size = m * sizeof(float *);
-        checkCudaErrors(cudaMalloc((void ***)&mat1_g, row_pointer_size));
+        CheckCudaError(cudaMalloc((void ***)&mat1_g, row_pointer_size));
         for (unsigned int i = 0; i < m; ++i) {
-            checkCudaErrors(cudaMalloc((void **)&(temp_p1[i]), row_size));
-            checkCudaErrors(cudaMemcpy(temp_p1[i], mat1[i], row_size,
+            CheckCudaError(cudaMalloc((void **)&(temp_p1[i]), row_size));
+            CheckCudaError(cudaMemcpy(temp_p1[i], mat1[i], row_size,
                                        cudaMemcpyHostToDevice));
         }
-        checkCudaErrors(cudaMemcpy(mat1_g, temp_p1, row_pointer_size,
+        CheckCudaError(cudaMemcpy(mat1_g, temp_p1, row_pointer_size,
                                    cudaMemcpyHostToDevice));
-        checkCudaErrors(cudaMalloc((void ***)&mat2_g, row_pointer_size));
+        CheckCudaError(cudaMalloc((void ***)&mat2_g, row_pointer_size));
         for (unsigned int i = 0; i < m; ++i) {
-            checkCudaErrors(cudaMalloc((void **)&(temp_p2[i]), row_size));
-            checkCudaErrors(cudaMemcpy(temp_p2[i], mat2[i], row_size,
+            CheckCudaError(cudaMalloc((void **)&(temp_p2[i]), row_size));
+            CheckCudaError(cudaMemcpy(temp_p2[i], mat2[i], row_size,
                                        cudaMemcpyHostToDevice));
         }
-        checkCudaErrors(cudaMemcpy(mat2_g, temp_p2, row_pointer_size,
+        CheckCudaError(cudaMemcpy(mat2_g, temp_p2, row_pointer_size,
                                    cudaMemcpyHostToDevice));
-        checkCudaErrors(cudaMalloc((float ***)&mat_pro_g, row_pointer_size));
+        CheckCudaError(cudaMalloc((float ***)&mat_pro_g, row_pointer_size));
         for (unsigned int i = 0; i < m; ++i) {
-            checkCudaErrors(cudaMalloc((void **)&(temp_pp[i]), row_size));
+            CheckCudaError(cudaMalloc((void **)&(temp_pp[i]), row_size));
         }
-        checkCudaErrors(cudaMemcpy(mat_pro_g, temp_pp, row_pointer_size,
+        CheckCudaError(cudaMemcpy(mat_pro_g, temp_pp, row_pointer_size,
                                    cudaMemcpyHostToDevice));
 
         // CPU computation
@@ -263,19 +264,19 @@ int main_old() {
             grid_dim = dim3(1, 1, 1);
         }
         cudaEvent_t start_g, stop_g;
-        checkCudaErrors(cudaEventCreate(&start_g));
-        checkCudaErrors(cudaEventCreate(&stop_g));
-        checkCudaErrors(cudaEventRecord(start_g));
+        CheckCudaError(cudaEventCreate(&start_g));
+        CheckCudaError(cudaEventCreate(&stop_g));
+        CheckCudaError(cudaEventRecord(start_g));
         gpu_gemm<<<grid_dim, block_dim>>>(mat1_g, mat2_g, mat_pro_g, m, n, k);
-        checkCudaErrors(cudaEventRecord(stop_g));
-        checkCudaErrors(cudaEventSynchronize(stop_g));
-        checkCudaErrors(cudaEventElapsedTime(&duration_gpu, start_g, stop_g));
+        CheckCudaError(cudaEventRecord(stop_g));
+        CheckCudaError(cudaEventSynchronize(stop_g));
+        CheckCudaError(cudaEventElapsedTime(&duration_gpu, start_g, stop_g));
         std::cout << "GPU computation:" << std::endl;
         std::cout << "  duration: " << duration_gpu << "ms" << std::endl;
-        checkCudaErrors(cudaEventDestroy(start_g));
-        checkCudaErrors(cudaEventDestroy(stop_g));
+        CheckCudaError(cudaEventDestroy(start_g));
+        CheckCudaError(cudaEventDestroy(stop_g));
         for (unsigned int i = 0; i < m; ++i) {
-            checkCudaErrors(cudaMemcpy(mat_prod2[i], temp_pp[i], row_size,
+            CheckCudaError(cudaMemcpy(mat_prod2[i], temp_pp[i], row_size,
                                        cudaMemcpyDeviceToHost));
         }
         print_matrix(mat_prod2, 0, 1, 0, 10);
@@ -291,9 +292,9 @@ int main_old() {
             delete[] mat_prod1[i];
             delete[] mat_prod2[i];
             delete[] mat2[i];
-            checkCudaErrors(cudaFree(temp_p1[i]));
-            checkCudaErrors(cudaFree(temp_p2[i]));
-            checkCudaErrors(cudaFree(temp_pp[i]));
+            CheckCudaError(cudaFree(temp_p1[i]));
+            CheckCudaError(cudaFree(temp_p2[i]));
+            CheckCudaError(cudaFree(temp_pp[i]));
         }
         delete[] mat1;
         delete[] mat2;
@@ -302,9 +303,9 @@ int main_old() {
         delete temp_p1;
         delete temp_p2;
         delete temp_pp;
-        checkCudaErrors(cudaFree(mat1_g));
-        checkCudaErrors(cudaFree(mat2_g));
-        checkCudaErrors(cudaFree(mat_pro_g));
+        CheckCudaError(cudaFree(mat1_g));
+        CheckCudaError(cudaFree(mat2_g));
+        CheckCudaError(cudaFree(mat_pro_g));
     }
 
     return 0;
